@@ -34,7 +34,7 @@ model Link {
   password  String?
   host      String
   hostname  String
-  port      Int?
+  port      String?
   path      String?
   pathname  String?
   search    String?
