@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int    @id @default(autoincrement())
+  username    String @unique()
+  email       String @unique()
+  password    String
+  displayName String
+
+  links  UserLink[]
+  spaces Space[]
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+}
+
+model Link {
+  id        Int      @id @default(autoincrement())
+  href      String   @unique()
+  origin    String
+  protocol  String
+  auth      String?
+  username  String?
+  password  String?
+  host      String
+  hostname  String
+  port      Int?
+  path      String?
+  pathname  String?
+  search    String?
+  hash      String?
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+
+  UserLinks UserLink[]
+}
+
+model UserLink {
+  id        Int      @id @default(autoincrement())
+  User      User     @relation(fields: [user], references: [id], onDelete: Cascade)
+  user      Int
+  Link      Link     @relation(fields: [link], references: [id], onDelete: Cascade)
+  link      Int
+  Space     Space    @relation(fields: [space], references: [id], onDelete: Cascade)
+  space     Int
+  Folder    Folder?  @relation(fields: [folder], references: [id], onDelete: Cascade)
+  folder    Int?
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+}
+
+model Folder {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String
+  createdAt DateTime   @default(now()) @db.Timestamptz()
+  updatedAt DateTime   @updatedAt
+  Space     Space      @relation(fields: [space], references: [id], onDelete: Cascade)
+  space     Int
+  Links     UserLink[]
+}
+
+model Space {
+  id       Int        @id @default(autoincrement())
+  slug     String
+  name     String
+  Owner    User       @relation(fields: [owner], references: [id], onDelete: Cascade)
+  owner    Int
+  Folders  Folder[]
+  UserLink UserLink[]
+  type     String     @default("PRIVATE")
+  listed   Boolean    @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt
+}
