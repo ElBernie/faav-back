@@ -49,4 +49,12 @@ export class LinksService {
       },
     });
   }
+
+  async findByLink(link: string): Promise<Link> {
+    return this.prismaService.link.findUnique({
+      where: {
+        href: link,
+      },
+    });
+  }
 }
