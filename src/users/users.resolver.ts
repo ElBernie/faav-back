@@ -1,10 +1,17 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Query,
+  ResolveField,
+  Resolver,
+  Parent,
+} from '@nestjs/graphql';
 import { CreateUser } from './dto/create-user.args';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 import { UpdateUser } from './dto/update-user.args';
 
-@Resolver('User')
+@Resolver(() => User)
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
@@ -34,5 +41,10 @@ export class UsersResolver {
   @Mutation(() => User)
   async userDelete(@Args('id') id: number) {
     return this.usersService.delete(id);
+  }
+
+  @ResolveField('spaces')
+  async spaces(@Parent() user: User) {
+    return this.usersService.getUserSpaces(user.id);
   }
 }

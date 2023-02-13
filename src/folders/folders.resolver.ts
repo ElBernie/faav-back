@@ -1,10 +1,17 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { CreateFolder } from './dto/create-folder.args';
 import { UpdateFolder } from './dto/update-folder.args';
 import { FoldersService } from './folders.service';
 import { Folder } from './models/folder.model';
 
-@Resolver()
+@Resolver(() => Folder)
 export class FoldersResolver {
   constructor(private foldersService: FoldersService) {}
 
@@ -31,5 +38,10 @@ export class FoldersResolver {
   @Mutation(() => Folder)
   folderDelete(@Args('id') id: number) {
     return this.foldersService.delete(id);
+  }
+
+  @ResolveField('space')
+  space(@Parent() folder: Folder) {
+    return this.foldersService.getFolderSpace(folder.id);
   }
 }

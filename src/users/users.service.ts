@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { User, Prisma } from '@prisma/client';
+import { User, Prisma, Space } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+
 import { UpdateUser } from './dto/update-user.args';
 
 @Injectable()
@@ -8,7 +9,7 @@ export class UsersService {
   constructor(private prismaService: PrismaService) {}
 
   async getAll(): Promise<User[] | null> {
-    return this.prismaService.user.findMany({});
+    return this.prismaService.user.findMany();
   }
 
   async getOne(id: number): Promise<User | null> {
@@ -25,6 +26,12 @@ export class UsersService {
         ...args,
         username: args.username.toLowerCase(),
         email: args.email.toLowerCase(),
+        spaces: {
+          create: {
+            name: 'My private space',
+            slug: 'my-private-space',
+          },
+        },
       },
     });
   }
@@ -50,5 +57,9 @@ export class UsersService {
         id: id,
       },
     });
+  }
+
+  async getUserSpaces(id: number): Promise<Space[]> {
+    return this.prismaService.user.findUnique({ where: { id: id } }).spaces();
   }
 }
