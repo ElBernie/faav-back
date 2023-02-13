@@ -44,4 +44,9 @@ export class FoldersResolver {
   space(@Parent() folder: Folder) {
     return this.foldersService.getFolderSpace(folder.id);
   }
+
+  @ResolveField('links')
+  async links(@Parent() folder: Folder) {
+    return this.foldersService.getFolderLinks(folder.id);
+  }
 }
