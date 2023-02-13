@@ -1,5 +1,6 @@
 import { Int, ObjectType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { Folder } from 'src/folders/models/folder.model';
+import { Userlink } from 'src/userlink/models/userlink.model';
 import { User } from 'src/users/models/user.model';
 
 @ObjectType()
@@ -30,4 +31,7 @@ export class Space {
 
   @Field(() => GraphQLISODateTime)
   updatedAt: Date;
+
+  @Field(() => [Userlink], { nullable: 'items' })
+  links: Userlink[];
 }

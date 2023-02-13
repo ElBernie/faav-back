@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, Space, Folder } from '@prisma/client';
+import { User, Space, Folder, UserLink } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma.service';
 import { CreateSpace } from './dto/create-space.args';
@@ -50,5 +50,14 @@ export class SpacesService {
 
   async getSpaceFolders(id: number): Promise<Folder[]> {
     return this.prismaService.space.findUnique({ where: { id: id } }).Folders();
+  }
+
+  async getSpaceLinks(id: number): Promise<UserLink[]> {
+    return this.prismaService.userLink.findMany({
+      where: {
+        space: id,
+        folder: null,
+      },
+    });
   }
 }

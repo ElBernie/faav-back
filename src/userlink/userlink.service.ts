@@ -49,7 +49,7 @@ export class UserlinkService {
               id: linkCreation.space,
             },
           },
-          Folder: {
+          Folder: linkCreation.folder && {
             connect: {
               id: linkCreation.folder,
             },

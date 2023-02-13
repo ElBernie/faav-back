@@ -50,4 +50,9 @@ export class SpacesResolver {
   async folders(@Parent() space: Space) {
     return this.spacesService.getSpaceFolders(space.id);
   }
+
+  @ResolveField('links')
+  async links(@Parent() space: Space) {
+    return this.spacesService.getSpaceLinks(space.id);
+  }
 }
