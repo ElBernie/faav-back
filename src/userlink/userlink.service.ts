@@ -1,9 +1,10 @@
-import { Prisma, UserLink } from '@prisma/client';
+import { Folder, Link, Prisma, Space, User, UserLink } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma.service';
 import { UpdateUserLink } from './dto/update-userlink.input';
 import { LinksService } from 'src/links/links.service';
+import { CreateUserlink } from './dto/create-userlink.args';
 
 @Injectable()
 export class UserlinkService {
@@ -16,7 +17,7 @@ export class UserlinkService {
     return this.prismaService.userLink.findMany();
   }
 
-  async geOne(id: number): Promise<UserLink> {
+  async getOne(id: number): Promise<UserLink> {
     return this.prismaService.userLink.findUnique({
       where: {
         id: id,
@@ -24,17 +25,64 @@ export class UserlinkService {
     });
   }
 
-  async create(link: string): Promise<UserLink> {
-    const existingLink = await this.linkService.findByLink(link);
+  async create(linkCreation: CreateUserlink): Promise<UserLink> {
+    const existingLink = await this.linkService.findByLink(linkCreation.url);
 
     /**
      * @todo when link relation are done
      */
-    // if (existingLink) {
-    //   return this.prismaService.userLink.create();
-    // } else {
-    //   const createdLink = await this.linkService.create(link);
-    // }
+    if (existingLink) {
+      return this.prismaService.userLink.create({
+        data: {
+          Link: {
+            connect: {
+              id: existingLink.id,
+            },
+          },
+          User: {
+            connect: {
+              id: linkCreation.creator,
+            },
+          },
+          Space: {
+            connect: {
+              id: linkCreation.space,
+            },
+          },
+          Folder: {
+            connect: {
+              id: linkCreation.folder,
+            },
+          },
+        },
+      });
+    } else {
+      const createdLink = await this.linkService.create(linkCreation.url);
+      return this.prismaService.userLink.create({
+        data: {
+          Link: {
+            connect: {
+              id: createdLink.id,
+            },
+          },
+          User: {
+            connect: {
+              id: linkCreation.creator,
+            },
+          },
+          Space: {
+            connect: {
+              id: linkCreation.space,
+            },
+          },
+          Folder: {
+            connect: {
+              id: linkCreation.folder,
+            },
+          },
+        },
+      });
+    }
 
     return;
   }
@@ -55,5 +103,31 @@ export class UserlinkService {
         id: id,
       },
     });
+  }
+
+  async getLink(id: number): Promise<Link> {
+    return this.prismaService.userLink.findUnique({ where: { id: id } }).Link();
+  }
+
+  async getSpace(id: number): Promise<Space> {
+    return this.prismaService.userLink
+      .findUnique({ where: { id: id } })
+      .Space();
+  }
+
+  async getFolder(id: number): Promise<Folder> {
+    return this.prismaService.userLink
+      .findUnique({ where: { id: id } })
+      .Folder();
+  }
+
+  async getCreator(id: number): Promise<User> {
+    return this.prismaService.userLink
+      .findUnique({
+        where: {
+          id: id,
+        },
+      })
+      .User();
   }
 }
