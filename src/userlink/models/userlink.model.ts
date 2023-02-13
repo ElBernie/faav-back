@@ -21,8 +21,8 @@ export class Userlink {
   @Field(() => Space)
   space: Space;
 
-  @Field(() => Folder)
-  folder: Folder;
+  @Field(() => Folder, { nullable: true })
+  folder?: Folder;
 
   @Field(() => User)
   creator: User;
