@@ -1,4 +1,5 @@
 import { Field, GraphQLISODateTime, Int, ObjectType } from '@nestjs/graphql';
+import { Space } from 'src/spaces/models/space.model';
 
 @ObjectType()
 export class User {
@@ -16,6 +17,9 @@ export class User {
 
   @Field(() => String)
   displayName: string;
+
+  @Field(() => [Space])
+  spaces: Space[];
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;

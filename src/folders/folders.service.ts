@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Folder, Prisma } from '@prisma/client';
+import { Folder, Prisma, Space } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
+
 import { CreateFolder } from './dto/create-folder.args';
 import { UpdateFolder } from './dto/update-folder.args';
 
@@ -60,5 +61,9 @@ export class FoldersService {
         id: id,
       },
     });
+  }
+
+  async getFolderSpace(id: number): Promise<Space> {
+    return this.prismaService.folder.findUnique({ where: { id: id } }).Space();
   }
 }

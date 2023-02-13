@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { User, Space, Folder } from '@prisma/client';
+
 import { PrismaService } from 'src/prisma.service';
 import { CreateSpace } from './dto/create-space.args';
 import { UpdateSpace } from './dto/update-space.args';
-import { Space } from './models/space.model';
 
 @Injectable()
 export class SpacesService {
@@ -41,5 +42,13 @@ export class SpacesService {
         id: id,
       },
     });
+  }
+
+  async getSpaceOwner(id: number): Promise<User> {
+    return this.prismaService.space.findUnique({ where: { id: id } }).Owner();
+  }
+
+  async getSpaceFolders(id: number): Promise<Folder[]> {
+    return this.prismaService.space.findUnique({ where: { id: id } }).Folders();
   }
 }
