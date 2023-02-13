@@ -7,6 +7,7 @@ import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { UsersModule } from './users/users.module';
 import { LinksModule } from './links/links.module';
 import { UserlinkModule } from './userlink/userlink.module';
+import { FoldersModule } from './folders/folders.module';
 
 @Module({
   imports: [
@@ -25,6 +26,8 @@ import { UserlinkModule } from './userlink/userlink.module';
     LinksModule,
 
     UserlinkModule,
+
+    FoldersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
