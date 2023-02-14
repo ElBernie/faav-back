@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -6,6 +7,8 @@ import {
   Resolver,
   Parent,
 } from '@nestjs/graphql';
+import { User } from 'src/auth/decorators/user.decorator';
+import { GraphGuard } from 'src/auth/guards/Graph.guard';
 
 import { CreateUserlink } from './dto/create-userlink.args';
 import { UpdateUserLink } from './dto/update-userlink.input';
@@ -27,8 +30,12 @@ export class UserlinkResolver {
   }
 
   @Mutation(() => Userlink)
-  async userlinkCreate(@Args() data: CreateUserlink) {
-    return this.userlinksService.create(data);
+  @UseGuards(GraphGuard)
+  async userlinkCreate(@User() user: any, @Args() data: CreateUserlink) {
+    return this.userlinksService.create({
+      ...data,
+      creator: user.id || data.creator,
+    });
   }
 
   @Mutation(() => Userlink)

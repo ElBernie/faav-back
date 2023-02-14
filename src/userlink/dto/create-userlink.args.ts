@@ -5,8 +5,8 @@ export class CreateUserlink {
   @Field()
   url: string;
 
-  @Field(() => Int)
-  creator: number;
+  @Field(() => Int, { nullable: true })
+  creator?: number;
 
   @Field(() => Int)
   space: number;
