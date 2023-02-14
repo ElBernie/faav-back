@@ -9,6 +9,7 @@ import { LinksModule } from './links/links.module';
 import { UserlinkModule } from './userlink/userlink.module';
 import { FoldersModule } from './folders/folders.module';
 import { SpacesModule } from './spaces/spaces.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,8 @@ import { SpacesModule } from './spaces/spaces.module';
     FoldersModule,
 
     SpacesModule,
+
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
