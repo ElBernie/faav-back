@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   Query,
   Resolver,
@@ -6,8 +7,12 @@ import {
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
+import { User } from 'src/auth/decorators/user.decorator';
+import { GraphGuard } from 'src/auth/guards/Graph.guard';
+import UserJWT from 'src/auth/types/userjwt.type';
 
 import { CreateSpace } from './dto/create-space.args';
+import { SetSpaceInfos } from './dto/setinfos-space.args';
 import { UpdateSpace } from './dto/update-space.args';
 import { Space } from './models/space.model';
 import { SpacesService } from './spaces.service';
@@ -34,6 +39,26 @@ export class SpacesResolver {
   @Mutation(() => Space)
   spaceUpdate(@Args('id') id: number, @Args('data') data: UpdateSpace) {
     return this.spacesService.update(id, data);
+  }
+
+  @Mutation(() => Space)
+  @UseGuards(GraphGuard)
+  spaceSetInfos(
+    @User() user: UserJWT,
+    @Args('id') id: number,
+    @Args('infos') infos: SetSpaceInfos,
+  ) {
+    return this.spacesService.setInfos(user, id, infos);
+  }
+
+  @Mutation(() => Space)
+  @UseGuards(GraphGuard)
+  spaceSetListed(
+    @User() user: UserJWT,
+    @Args('id') id: number,
+    @Args('listed') listed: boolean,
+  ) {
+    return this.spacesService.setListed(user, id, listed);
   }
 
   @Mutation(() => Space)

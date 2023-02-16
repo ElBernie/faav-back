@@ -17,7 +17,10 @@ export class Space {
   @Field(() => User)
   owner: User;
 
-  @Field({ defaultValue: 'PRIVATE' })
+  @Field()
+  description: string;
+
+  @Field()
   type: string;
 
   @Field(() => Boolean, { defaultValue: false })

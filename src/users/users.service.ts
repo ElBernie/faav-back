@@ -45,6 +45,7 @@ export class UsersService {
           create: {
             name: 'My private space',
             slug: 'my-private-space',
+            default: true,
           },
         },
       },
