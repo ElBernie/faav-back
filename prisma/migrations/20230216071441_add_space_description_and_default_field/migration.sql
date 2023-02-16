@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Space" ADD COLUMN     "default" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "description" TEXT,
+ALTER COLUMN "type" DROP NOT NULL,
+ALTER COLUMN "type" DROP DEFAULT;

@@ -71,16 +71,17 @@ model Folder {
 }
 
 model Space {
-  id       Int        @id @default(autoincrement())
-  slug     String
-  name     String
-  Owner    User       @relation(fields: [owner], references: [id], onDelete: Cascade)
-  owner    Int
-  Folders  Folder[]
-  UserLink UserLink[]
-  type     String     @default("PRIVATE")
-  listed   Boolean    @default(false)
-
-  createdAt DateTime @default(now()) @db.Timestamptz()
-  updatedAt DateTime @updatedAt
+  id          Int        @id @default(autoincrement())
+  slug        String
+  name        String
+  description String?
+  Owner       User       @relation(fields: [owner], references: [id], onDelete: Cascade)
+  owner       Int
+  Folders     Folder[]
+  UserLink    UserLink[]
+  type        String     @default("PRIVATE")
+  listed      Boolean    @default(false)
+  default     Boolean    @default(false)
+  createdAt   DateTime   @default(now()) @db.Timestamptz()
+  updatedAt   DateTime   @updatedAt
 }
